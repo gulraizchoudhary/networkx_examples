@@ -9,7 +9,7 @@ import networkx as nx
 
 G = nx.DiGraph()
 
-#sample json keys are labels and list contains sequences
+#sample json keys are labels and list contains sequences (A sequence can a be a set of temporal ICD-10 codes)
 data = {'1': {'gender':'M' ,'age':'20-30', 'sequence': ['B', 'D']},
          '2':{'gender':'M','age':'20-30', 'sequence': ['B', 'D', 'E']},
          '3': {'gender':'F','age':'20-30','sequence':['A', 'F']},
@@ -20,14 +20,14 @@ data = {'1': {'gender':'M' ,'age':'20-30', 'sequence': ['B', 'D']},
 
 #iterate through the graph
 for lst, key in enumerate(data.keys()):
-       
-       
+     
        gender = data[key]['gender']
        age_group = data[key]['age']
        
         
        start = 'STR'
        term = 'END'
+       
        #Add nodes if they don't exist
        if not start in G.nodes:
            G.add_node(start)
@@ -57,16 +57,16 @@ for lst, key in enumerate(data.keys()):
                G.add_node(item)
                G.nodes[item][gender]={}
                G.nodes[item][gender][age_group]={}
-               G.nodes[item][gender][age_group]['labels']=1               
+               G.nodes[item][gender][age_group]['weight']=1               
            else:
                if gender not in G.nodes[item]:
                    G.nodes[item][gender]={}
                     
                if age_group not in G.nodes[item][gender]:
                     G.nodes[item][gender][age_group]={}
-                    G.nodes[item][gender][age_group]['labels']=1  
+                    G.nodes[item][gender][age_group]['weight']=1  
                else:
-                    G.nodes[item][gender][age_group]['labels']+=1
+                    G.nodes[item][gender][age_group]['weight']+=1
            if flag:
                flag = False
                prev =age_group
@@ -101,7 +101,3 @@ for lst, key in enumerate(data.keys()):
                 G.edges[item, term]['weight'][gender][age_group] =[key]
            else:
                 G.edges[item, term]['weight'][gender][age_group].append(key)
-           
-    
-
-
